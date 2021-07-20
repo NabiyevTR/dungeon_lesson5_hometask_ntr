@@ -14,6 +14,7 @@ public class UnitController {
     private int index;
     private List<Unit> allUnits;
 
+
     public MonsterController getMonsterController() {
         return monsterController;
     }
@@ -52,11 +53,29 @@ public class UnitController {
     }
 
     public void nextTurn() {
+
         index++;
         if (index >= allUnits.size()) {
             index = 0;
         }
         currentUnit = allUnits.get(index);
+
+        // 5. Попробуйте посчитать раунды ( каждый раз, когда ход переходит к игроку
+        // номер раунда должен увеличиваться )
+        if (currentUnit.unitType == Unit.UnitType.HERO) {
+            gc.incGameRound();
+        }
+
+        // 6. В начале 3 раунда должен появиться новый монстр ( * каждого третьего )
+        if (gc.getGameRound() % 3 == 0 && currentUnit.unitType == Unit.UnitType.HERO) {
+            allUnits.add(gc.getUnitController().getMonsterController().getNewMonster());
+        }
+
+        // 7. В начале хода персонажи восстанавливают 1 хп
+        if (currentUnit.hp < currentUnit.hpMax) {
+            currentUnit.hp++;
+        }
+
         currentUnit.startTurn();
     }
 

@@ -20,6 +20,20 @@ public class MonsterController extends ObjectPool<Monster> {
         getActiveElement().activate(cellX, cellY);
     }
 
+    public Monster getNewMonster() {
+        int cellX, cellY;
+        do {
+            cellX = (int)(Math.random()*gc.getGameMap().getCellsX());
+            cellY = (int)(Math.random()*gc.getGameMap().getCellsY());
+        }
+        while (!gc.getGameMap().isCellPassable(cellX, cellY));
+
+        Monster monster = getActiveElement();
+        monster.activate(cellX,cellY);
+        return monster;
+
+    }
+
     public Monster getMonsterInCell(int cellX, int cellY) {
         for (Monster m : getActiveList()) {
             if (m.getCellX() == cellX && m.getCellY() == cellY) {

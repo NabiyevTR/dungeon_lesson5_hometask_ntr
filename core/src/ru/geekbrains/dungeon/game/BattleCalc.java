@@ -19,4 +19,8 @@ public class BattleCalc {
         }
         return 0;
     }
+
+    public static int getCoins() {
+        return (int)(Math.random() * 3) + 1;
+    }
 }

@@ -9,6 +9,8 @@ public class GameController {
     private UnitController unitController;
     private GameMap gameMap;
 
+    private int gameRound;
+
     private int cursorX, cursorY;
 
     public int getCursorX() {
@@ -17,6 +19,14 @@ public class GameController {
 
     public int getCursorY() {
         return cursorY;
+    }
+
+    public int getGameRound() {
+        return gameRound;
+    }
+
+    public void incGameRound() {
+        gameRound++;
     }
 
     public ProjectileController getProjectileController() {

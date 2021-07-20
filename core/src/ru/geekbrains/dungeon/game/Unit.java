@@ -22,6 +22,14 @@ public abstract class Unit implements Poolable {
     int targetX, targetY;
     int turns, maxTurns;
     float innerTimer;
+    String name;
+    int coins;
+
+    enum UnitType {HERO, MONSTER}
+
+    ;
+    UnitType unitType = UnitType.MONSTER;
+
 
     public int getDefence() {
         return defence;
@@ -97,6 +105,11 @@ public abstract class Unit implements Poolable {
 
     public void attack(Unit target) {
         target.takeDamage(BattleCalc.attack(this, target));
+
+        // 4. При убийстве монстра персонаж может получить 1-3 монеты
+        if (target.hp <= 0) {
+            coins += BattleCalc.getCoins();
+        }
         this.takeDamage(BattleCalc.checkCounterAttack(this, target));
         turns--;
     }
@@ -124,15 +137,30 @@ public abstract class Unit implements Poolable {
         batch.draw(texture, px, py);
         batch.setColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-
         float barX = px, barY = py + MathUtils.sin(innerTimer * 5.0f) * 2;
+
+        // Если жизнь персонажа 100% то полоска жизни должна отрисовываться с альфа 0.2
+        float transparency;
+        if (unitType == UnitType.HERO && hp == hpMax) {
+            transparency = 0.2f;
+        } else {
+            transparency = 1.0f;
+        }
+
         batch.draw(textureHp, barX + 1, barY + 51, 58, 10);
-        batch.setColor(0.7f, 0.0f, 0.0f, 1.0f);
+        batch.setColor(0.7f, 0.0f, 0.0f, transparency);
         batch.draw(textureHp, barX + 2, barY + 52, 56, 8);
-        batch.setColor(0.0f, 1.0f, 0.0f, 1.0f);
+        batch.setColor(0.0f, 1.0f, 0.0f, transparency);
         batch.draw(textureHp, barX + 2, barY + 52, (float) hp / hpMax * 56, 8);
         batch.setColor(1.0f, 1.0f, 1.0f, 1.0f);
         font18.draw(batch, "" + hp, barX, barY + 64, 60, 1, false);
+
+        // Имя героя и количество монет
+        if (unitType == UnitType.HERO) {
+            font18.draw(batch, name + ": " + coins, barX, barY + 80, 60, 1, false);
+        }
+
+
     }
 
     public int getTurns() {
