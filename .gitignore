@@ -1,3 +1,10 @@
+*.ini
+*.bin
+*.lock
+*.iml
+*.xml
+*.txt
+
 # Compiled class file
 *.class
 
